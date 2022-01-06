@@ -1,0 +1,15 @@
+clarkwinkelmann-godot-embed:
+    admin:
+        settings:
+            basePath: Base Path
+            basePathHelp: URL to a folder containing <code>godot.js</code> and <code>godot.wasm</code>, without any trailing slash
+            iframeHost: Iframe Host
+            iframeHostHelp: >
+                By default the iframe is served from Flarum domain, but this leaves the website vulnerable to XSS attacks.
+                Make Flarum accessible through an alternate domain that doesn't have access to cookies from the canonical URL and provide the full domain name here (no protocol).
+        permission:
+            collapse: Collapse posts
+    embed:
+        title: Godot Embedded Player # Not usually visible but it might be shown by the browser in alerts coming from the iframe
+        canvas-unsupported: HTML5 canvas appears to be unsupported in the current browser. Try updating or use a different browser.
+        webgl-not-available: WebGL not available

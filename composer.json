@@ -1,0 +1,44 @@
+{
+    "name": "clarkwinkelmann/flarum-ext-godot-embed",
+    "description": "Embed Godot pck files in Flarum posts",
+    "keywords": [
+        "flarum",
+        "godot",
+        "embed"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "require": {
+        "flarum/core": "^1.0",
+        "fof/upload": "*",
+        "flarum/bbcode": "*"
+    },
+    "authors": [
+        {
+            "name": "Clark Winkelmann",
+            "email": "clark.winkelmann@gmail.com",
+            "homepage": "https://clarkwinkelmann.com/",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/clarkwinkelmann/flarum-ext-godot-embed/issues",
+        "source": "https://github.com/clarkwinkelmann/flarum-ext-godot-embed"
+    },
+    "autoload": {
+        "psr-4": {
+            "ClarkWinkelmann\\GodotEmbed\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Godot Embed",
+            "category": "feature",
+            "icon": {
+                "name": "fas fa-robot",
+                "backgroundColor": "#684ba6",
+                "color": "#fff"
+            }
+        }
+    }
+}

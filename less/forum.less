@@ -23,34 +23,53 @@
     }
 }
 
-@godot-toolbar-height: 50px;
+// The actual height of the element isn't super important because the items are aligned at the bottom
+// But it needs to be tall enough to hide the buttons when it slides out of screen
+@godot-toolbar-height: 52px;
 
 .godot-toolbar {
-    // Same colors as header in colored mode
-    background: @primary-color;
-    color: @body-bg;
     height: @godot-toolbar-height;
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: @godot-toolbar-height * -1;
     display: flex;
-    align-items: center;
+    align-items: end;
     justify-content: right;
-    padding: 0 5px;
+    transition: bottom 0.3s;
+    pointer-events: none;
 
     .Button {
-        margin: 0 5px;
+        .Button--color(white, rgba(0, 0, 0, 0.7));
+
+        margin: 0 5px 5px 0;
+        pointer-events: visible;
     }
-}
 
-.godot-canvas-wrapper {
-    height: ~"calc(100vh - @{godot-toolbar-height})";
-    position: relative;
+    // On phone, always show toolbar
+    // Can't use built-in @phone query because it looks for iframe size instead of device size
+    @media (max-device-width: @screen-phone-max) {
+        bottom: 0;
+    }
 
-    canvas {
-        width: 100%;
-        height: 100%;
+    body:hover & {
+        bottom: 0;
+    }
+
+    // Make buttons bigger, but not on mobile
+    @media (min-device-width: @screen-phone-max) {
+        .Button {
+            font-size: 30px;
+
+            &.Button--icon {
+                width: 46px;
+                padding: 8px;
+            }
+        }
+
+        .Button-icon {
+            font-size: 30px;
+        }
     }
 }
 
@@ -66,6 +85,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: black; // Same as page background, but this way it hides the toolbar
     background-size: cover;
     background-position: center center;
 

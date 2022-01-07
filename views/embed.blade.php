@@ -140,11 +140,9 @@
     </style>
 </head>
 <body>
-<div class="godot-canvas-wrapper">
-    <canvas id="canvas">
-        {{ $translator->trans('clarkwinkelmann-godot-embed.embed.canvas-unsupported') }}
-    </canvas>
-</div>
+<canvas id="canvas">
+    {{ $translator->trans('clarkwinkelmann-godot-embed.embed.canvas-unsupported') }}
+</canvas>
 <div id="status">
     <div id="status-progress" style="display: none;" oncontextmenu="event.preventDefault();">
         <div id="status-progress-inner"></div>
@@ -168,21 +166,19 @@
     </div>
 </div>
 <div class="godot-toolbar">
-    <button class="Button" id="js-restart">
+    <button class="Button Button--icon" id="js-restart"
+            title="{{ $translator->trans('clarkwinkelmann-godot-embed.embed.restart-game') }}">
         <i class="Button-icon icon fas fa-redo"></i>
-        <span class="Button-text">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.restart-game') }}</span>
     </button>
-    <button class="Button" id="js-fullscreen">
+    <button class="Button Button--icon" id="js-fullscreen"
+            title="{{ $translator->trans('clarkwinkelmann-godot-embed.embed.full-screen') }}">
         <i class="Button-icon icon fas fa-expand"></i>
-        <span class="Button-text">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.full-screen') }}</span>
     </button>
 </div>
 
 <script type="text/javascript" src="{{ $javascriptPath }}"></script>
 <script type="text/javascript">//<![CDATA[
-    const engine = new Engine({
-        canvasResizePolicy: 0,
-    });
+    const engine = new Engine({});
 
     (function () {
         const INDETERMINATE_STATUS_STEP_MS = 100;
@@ -201,15 +197,6 @@
         function animate(time) {
             animationCallbacks.forEach(callback => callback(time));
             requestAnimationFrame(animate);
-
-            const width = canvas.clientWidth;
-            const height = canvas.clientHeight;
-
-            // Resize manually, otherwise canvasResizePolicy tries to use full screen
-            if (canvas.width !== width || canvas.height !== height) {
-                canvas.width = width;
-                canvas.height = height;
-            }
         }
 
         requestAnimationFrame(animate);
@@ -271,13 +258,10 @@
         }
 
         function updateRestartIcon() {
-            document.getElementById('js-restart').querySelector('.icon').className = 'icon fas fa-' + (restarting ? 'spinner fa-pulse' : 'redo');
+            document.getElementById('js-restart').querySelector('.icon').className = 'Button-icon icon fas fa-' + (restarting ? 'spinner fa-pulse' : 'redo');
         }
 
         function startGame() {
-            restarting = false;
-            updateRestartIcon();
-
             if (!Engine.isWebGLAvailable()) {
                 displayFailureNotice(@json($translator->trans('clarkwinkelmann-godot-embed.embed.webgl-not-available')));
             } else {
@@ -288,6 +272,9 @@
                     engine.preloadFile(@json($url)),
                 ]).then(function () {
                     setStatusMode('indeterminate');
+
+                    restarting = false;
+                    updateRestartIcon();
 
                     return engine.start({
                         args: @json($args),

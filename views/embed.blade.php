@@ -161,18 +161,18 @@
     </div>
     <div id="status-notice" class="godot" style="display: none;"></div>
 </div>
-<div class="godot-start" onclick="startGame()" style="@if ($cover) background-image: url({{ $cover }}) @endif">
+<div class="godot-start" id="js-load" style="@if ($cover) background-image: url({{ $cover }}) @endif">
     <div>
         <i class="icon fas fa-play"></i>
         <div>{{ $translator->trans('clarkwinkelmann-godot-embed.embed.load-game') }}</div>
     </div>
 </div>
 <div class="godot-toolbar">
-    <button class="Button" onclick="engine.requestQuit()">
-        <i class="Button-icon icon fas fa-sign-out-alt"></i>
-        <span class="Button-text">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.exit-game') }}</span>
+    <button class="Button" id="js-restart">
+        <i class="Button-icon icon fas fa-redo"></i>
+        <span class="Button-text">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.restart-game') }}</span>
     </button>
-    <button class="Button" onclick="document.getElementById('canvas').requestFullscreen()">
+    <button class="Button" id="js-fullscreen">
         <i class="Button-icon icon fas fa-expand"></i>
         <span class="Button-text">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.full-screen') }}</span>
     </button>
@@ -184,9 +184,7 @@
         canvasResizePolicy: 0,
     });
 
-    function startGame() {
-        document.querySelector('.godot-start').style.display = 'none';
-
+    (function () {
         const INDETERMINATE_STATUS_STEP_MS = 100;
         const canvas = document.getElementById('canvas');
         const statusProgress = document.getElementById('status-progress');
@@ -196,6 +194,7 @@
 
         let initializing = true;
         let statusMode = 'hidden';
+        let restarting = false;
 
         let animationCallbacks = [];
 
@@ -271,38 +270,98 @@
             initializing = false;
         }
 
-        if (!Engine.isWebGLAvailable()) {
-            displayFailureNotice(@json($translator->trans('clarkwinkelmann-godot-embed.embed.webgl-not-available')));
-        } else {
-            setStatusMode('indeterminate');
-
-            Promise.all([
-                engine.init(@json($basePath)),
-                engine.preloadFile(@json($url)),
-            ]).then(function () {
-                return engine.start({
-                    args: @json($args),
-                    'onProgress': function (current, total) {
-                        if (total > 0) {
-                            statusProgressInner.style.width = current / total * 100 + '%';
-                            setStatusMode('progress');
-                            if (current === total) {
-                                // wait for progress bar animation
-                                setTimeout(() => {
-                                    setStatusMode('indeterminate');
-                                }, 500);
-                            }
-                        } else {
-                            setStatusMode('indeterminate');
-                        }
-                    },
-                }).then(() => {
-                    setStatusMode('hidden');
-                    initializing = false;
-                }, displayFailureNotice);
-            });
+        function updateRestartIcon() {
+            document.getElementById('js-restart').querySelector('.icon').className = 'icon fas fa-' + (restarting ? 'spinner fa-pulse' : 'redo');
         }
-    }
+
+        function startGame() {
+            restarting = false;
+            updateRestartIcon();
+
+            if (!Engine.isWebGLAvailable()) {
+                displayFailureNotice(@json($translator->trans('clarkwinkelmann-godot-embed.embed.webgl-not-available')));
+            } else {
+                setStatusMode('indeterminate');
+
+                Promise.all([
+                    engine.init(@json($basePath)),
+                    engine.preloadFile(@json($url)),
+                ]).then(function () {
+                    setStatusMode('indeterminate');
+
+                    return engine.start({
+                        args: @json($args),
+                        onProgress: function (current, total) {
+                            if (total > 0) {
+                                statusProgressInner.style.width = current / total * 100 + '%';
+                                setStatusMode('progress');
+                                if (current === total) {
+                                    // wait for progress bar animation
+                                    setTimeout(() => {
+                                        setStatusMode('indeterminate');
+                                    }, 500);
+                                }
+                            } else {
+                                setStatusMode('indeterminate');
+                            }
+                        },
+                        onExit: function () {
+                            if (restarting) {
+                                startGame();
+                            } else {
+                                // If the game quits by itself, we go back to the loading screen
+                                // that way the canvas doesn't continue to show a frozen image
+                                document.getElementById('js-load').style.display = 'block';
+                            }
+                        },
+                    }).then(() => {
+                        setStatusMode('hidden');
+                        initializing = false;
+                    }, displayFailureNotice);
+                });
+            }
+        }
+
+        document.getElementById('js-load').addEventListener('click', function () {
+            this.style.display = 'none';
+
+            startGame();
+        });
+
+        document.getElementById('js-restart').addEventListener('click', function () {
+            if (restarting && confirm(@json($translator->trans('clarkwinkelmann-godot-embed.embed.force-quit')))) {
+                engine.unload();
+
+                loadGame();
+
+                return;
+            }
+
+            engine.requestQuit();
+
+            restarting = true;
+            updateRestartIcon();
+
+            // The game will restart inside onExit callback
+        });
+
+        document.getElementById('js-fullscreen').addEventListener('click', function () {
+            const canvas = document.getElementById('canvas');
+
+            if (canvas.requestFullscreen) {
+                canvas.requestFullscreen();
+                return;
+            }
+
+            // Safari
+            if (canvas.webkitRequestFullscreen) {
+                canvas.webkitRequestFullscreen();
+                return;
+            }
+
+            alert(@json($translator->trans('clarkwinkelmann-godot-embed.embed.fullscreen-not-available')));
+        });
+    })();
 
     //]]></script>
 </body>

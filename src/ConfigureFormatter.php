@@ -30,7 +30,7 @@ class ConfigureFormatter
 
         $config->BBcodes->addCustom(
             '[GODOT]{URL}[/GODOT]',
-            '<div class="godot-embed"><iframe src="{$GODOT_EMBED_URL}?url={URL}"></iframe></div>'
+            '<div class="godot-embed"><iframe src="{$GODOT_EMBED_URL}?url={URL}" allowfullscreen></iframe></div>'
         );
     }
 }

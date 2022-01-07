@@ -12,3 +12,55 @@
         top: 0;
     }
 }
+
+@godot-toolbar-height: 50px;
+
+.godot-toolbar {
+    // Same colors as header in colored mode
+    background: @primary-color;
+    color: @body-bg;
+    height: @godot-toolbar-height;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding: 0 5px;
+
+    .Button {
+        margin: 0 5px;
+    }
+}
+
+.godot-canvas-wrapper {
+    height: ~"calc(100vh - @{godot-toolbar-height})";
+    position: relative;
+
+    canvas {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.godot-start {
+    cursor: pointer;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 2em;
+
+    .icon {
+        font-size: 2em;
+        margin-bottom: 30px;
+    }
+}

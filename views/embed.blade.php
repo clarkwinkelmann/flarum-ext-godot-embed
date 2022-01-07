@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html xmlns="https://www.w3.org/1999/xhtml">
+<html>
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, user-scalable=no"/>
     <title>{{ $translator->trans('clarkwinkelmann-godot-embed.embed.title') }}</title>
-    <style type="text/css">
+    <link rel="stylesheet" href="{{ $cssPath }}"/>
+    <style>
+        html, body {
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
         body {
             touch-action: none;
             margin: 0;
@@ -32,7 +38,6 @@
             border: 1px solid #45434e;
             box-shadow: 0 0 1px 1px #2f2d35;
         }
-
 
         /* Status display
          * ============== */
@@ -131,14 +136,15 @@
             line-height: 1.3;
             visibility: visible;
             padding: 4px 6px;
-            visibility: visible;
         }
     </style>
 </head>
 <body>
-<canvas id="canvas">
-    {{ $translator->trans('clarkwinkelmann-godot-embed.embed.canvas-unsupported') }}
-</canvas>
+<div class="godot-canvas-wrapper">
+    <canvas id="canvas">
+        {{ $translator->trans('clarkwinkelmann-godot-embed.embed.canvas-unsupported') }}
+    </canvas>
+</div>
 <div id="status">
     <div id="status-progress" style="display: none;" oncontextmenu="event.preventDefault();">
         <div id="status-progress-inner"></div>
@@ -155,39 +161,68 @@
     </div>
     <div id="status-notice" class="godot" style="display: none;"></div>
 </div>
+<div class="godot-start" onclick="startGame()">
+    <div>
+        <i class="icon fas fa-play"></i>
+        <div>{{ $translator->trans('clarkwinkelmann-godot-embed.embed.load-game') }}</div>
+    </div>
+</div>
+<div class="godot-toolbar">
+    <button class="Button" onclick="engine.requestQuit()">
+        <i class="Button-icon icon fas fa-sign-out-alt"></i>
+        <span class="Button-text">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.exit-game') }}</span>
+    </button>
+    <button class="Button" onclick="document.getElementById('canvas').requestFullscreen()">
+        <i class="Button-icon icon fas fa-expand"></i>
+        <span class="Button-text">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.full-screen') }}</span>
+    </button>
+</div>
 
 <script type="text/javascript" src="{{ $javascriptPath }}"></script>
 <script type="text/javascript">//<![CDATA[
-    const engine = new Engine({});
+    const engine = new Engine({
+        canvasResizePolicy: 0,
+    });
 
-    (function () {
+    function startGame() {
+        document.querySelector('.godot-start').style.display = 'none';
+
         const INDETERMINATE_STATUS_STEP_MS = 100;
-        var statusProgress = document.getElementById('status-progress');
-        var statusProgressInner = document.getElementById('status-progress-inner');
-        var statusIndeterminate = document.getElementById('status-indeterminate');
-        var statusNotice = document.getElementById('status-notice');
+        const canvas = document.getElementById('canvas');
+        const statusProgress = document.getElementById('status-progress');
+        const statusProgressInner = document.getElementById('status-progress-inner');
+        const statusIndeterminate = document.getElementById('status-indeterminate');
+        const statusNotice = document.getElementById('status-notice');
 
-        var initializing = true;
-        var statusMode = 'hidden';
+        let initializing = true;
+        let statusMode = 'hidden';
 
-        var animationCallbacks = [];
+        let animationCallbacks = [];
 
         function animate(time) {
             animationCallbacks.forEach(callback => callback(time));
             requestAnimationFrame(animate);
+
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+
+            // Resize manually, otherwise canvasResizePolicy tries to use full screen
+            if (canvas.width !== width || canvas.height !== height) {
+                canvas.width = width;
+                canvas.height = height;
+            }
         }
 
         requestAnimationFrame(animate);
 
         function setStatusMode(mode) {
-
             if (statusMode === mode || !initializing)
                 return;
             [statusProgress, statusIndeterminate, statusNotice].forEach(elem => {
                 elem.style.display = 'none';
             });
             animationCallbacks = animationCallbacks.filter(function (value) {
-                return (value != animateStatusIndeterminate);
+                return (value !== animateStatusIndeterminate);
             });
             switch (mode) {
                 case 'progress':
@@ -209,8 +244,8 @@
         }
 
         function animateStatusIndeterminate(ms) {
-            var i = Math.floor(ms / INDETERMINATE_STATUS_STEP_MS % 8);
-            if (statusIndeterminate.children[i].style.borderTopColor == '') {
+            const i = Math.floor(ms / INDETERMINATE_STATUS_STEP_MS % 8);
+            if (statusIndeterminate.children[i].style.borderTopColor === '') {
                 Array.prototype.slice.call(statusIndeterminate.children).forEach(child => {
                     child.style.borderTopColor = '';
                 });
@@ -222,15 +257,14 @@
             while (statusNotice.lastChild) {
                 statusNotice.removeChild(statusNotice.lastChild);
             }
-            var lines = text.split('\n');
-            lines.forEach((line) => {
+            text.split('\n').forEach((line) => {
                 statusNotice.appendChild(document.createTextNode(line));
                 statusNotice.appendChild(document.createElement('br'));
             });
         }
 
         function displayFailureNotice(err) {
-            var msg = err.message || err;
+            const msg = err.message || err;
             console.error(msg);
             setStatusNotice(msg);
             setStatusMode('notice');
@@ -271,7 +305,8 @@
                 }, displayFailureNotice);
             });
         }
-    })();
+    }
+
     //]]></script>
 </body>
 </html>

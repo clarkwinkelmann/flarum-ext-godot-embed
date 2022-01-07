@@ -13,3 +13,6 @@ clarkwinkelmann-godot-embed:
         title: Godot Embedded Player # Not usually visible but it might be shown by the browser in alerts coming from the iframe
         canvas-unsupported: HTML5 canvas appears to be unsupported in the current browser. Try updating or use a different browser.
         webgl-not-available: WebGL not available
+        load-game: Click to load game
+        exit-game: Exit game
+        full-screen: Full screen

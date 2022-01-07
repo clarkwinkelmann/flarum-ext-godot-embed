@@ -1,8 +1,18 @@
 .godot-embed {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%; // Roughly 16:9
+    // The default values here will probably never be used because the bbcode always injects the variables with the bbcode default values
+    --godot-embed-width: 600;
+    --godot-embed-height: 400;
+
+    width: ~"calc(var(--godot-embed-width) * 1px)";
+    max-width: 100%;
+
+    // A wrapper class between the embed and the iframe is necessary because the padding bottom trick
+    // will be in % of the parent element's width
+    .godot-embed-wrapper {
+        position: relative;
+        height: 0;
+        padding-bottom: ~"calc(var(--godot-embed-height) / var(--godot-embed-width) * 100%)"; // Apply ratio
+    }
 
     iframe {
         position: absolute;

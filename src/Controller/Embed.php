@@ -39,9 +39,37 @@ class Embed implements RequestHandlerInterface
         $javascriptPath = $pathPrefix . '/godot.js';
         $basePath = $pathPrefix . '/godot'; // Godot adds .wasm automatically
 
+        $args = [
+            '--main-pack',
+            Arr::get($params, 'url'),
+        ];
+
+        $userArgs = Arr::get($params, 'args');
+
+        if ($userArgs) {
+            // Separate args similarly to command line, but keep quoted strings together
+            // And remove the quotes
+            foreach (["'", '"'] as $quote) {
+                // Use positive lookahead to match multiple occurrences right after another
+                $userArgs = preg_replace_callback('~(\s|^)' . $quote . '([^"]+)' . $quote . '(?=\s|$)~', function ($matches) {
+                    return $matches[1] . '' . str_replace(' ', '%%PRESERVE_SPACE%%', $matches[2]);
+                }, $userArgs);
+            }
+
+            $newArgs = explode(' ', $userArgs);
+
+            $newArgs = array_map(function ($arg) {
+                return str_replace('%%PRESERVE_SPACE%%', ' ', $arg);
+            }, $newArgs);
+
+            $args = array_merge($args, $newArgs);
+        }
+
         return new HtmlResponse(
             $this->view->make('godot-embed::embed')
                 ->with('url', Arr::get($params, 'url'))
+                ->with('cover', Arr::get($params, 'cover'))
+                ->with('args', $args)
                 ->with('cssPath', $cssPath)
                 ->with('javascriptPath', $javascriptPath)
                 ->with('basePath', $basePath)

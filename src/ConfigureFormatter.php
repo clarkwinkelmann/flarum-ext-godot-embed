@@ -29,8 +29,8 @@ class ConfigureFormatter
         $config->rendering->parameters['GODOT_EMBED_URL'] = $iframeUrl;
 
         $config->BBcodes->addCustom(
-            '[GODOT]{URL}[/GODOT]',
-            '<div class="godot-embed"><iframe src="{$GODOT_EMBED_URL}?url={URL}" allowfullscreen></iframe></div>'
+            '[GODOT cover={URL2?} args={TEXT?}]{URL}[/GODOT]',
+            '<div class="godot-embed"><iframe src="{$GODOT_EMBED_URL}?url={URL}&cover={@cover}&args={@args}" allowfullscreen></iframe></div>'
         );
     }
 }

@@ -161,7 +161,7 @@
     </div>
     <div id="status-notice" class="godot" style="display: none;"></div>
 </div>
-<div class="godot-start" onclick="startGame()">
+<div class="godot-start" onclick="startGame()" style="@if ($cover) background-image: url({{ $cover }}) @endif">
     <div>
         <i class="icon fas fa-play"></i>
         <div>{{ $translator->trans('clarkwinkelmann-godot-embed.embed.load-game') }}</div>
@@ -281,10 +281,7 @@
                 engine.preloadFile(@json($url)),
             ]).then(function () {
                 return engine.start({
-                    args: [
-                        '--main-pack',
-                        @json($url),
-                    ],
+                    args: @json($args),
                     'onProgress': function (current, total) {
                         if (total > 0) {
                             statusProgressInner.style.width = current / total * 100 + '%';

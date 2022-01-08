@@ -79,6 +79,7 @@ class Embed implements RequestHandlerInterface
                 ->with('url', $url)
                 ->with('cover', Arr::get($params, 'cover'))
                 ->with('mobileCompatible', (bool)Arr::get($params, 'mobile'))
+                ->with('autoload', (bool)Arr::get($params, 'autoload'))
                 ->with('args', $args)
                 ->with('fileSizes', $fileSizes)
                 ->with('cssPath', $cssPath)

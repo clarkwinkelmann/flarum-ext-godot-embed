@@ -215,6 +215,18 @@
                 }
             },
             onExit: function () {
+                quitting = false;
+                updateQuitIcon();
+
+                // Hide old canvas so it doesn't appear before next game loads
+                // Can't use context to clear rectangle because we're not sure what kind of context will be used by the engine
+                const canvas = document.getElementById('canvas');
+                canvas.width = 0;
+                canvas.height = 0;
+
+                // Allow loading screen to re-appear
+                initializing = true;
+
                 if (restarting) {
                     startGame();
                 } else {
@@ -222,7 +234,14 @@
                     // that way the canvas doesn't continue to show a frozen image
                     document.getElementById('js-load').style.display = 'flex';
 
-                    document.exitFullscreen();
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    }
+
+                    // Safari
+                    if (document.webkitFullscreenElement) {
+                        document.webkitExitFullscreen();
+                    }
                 }
             },
             onPrint: function () {
@@ -243,6 +262,7 @@
         let initializing = true;
         let statusMode = 'hidden';
         let restarting = false;
+        let quitting = false;
 
         let animationCallbacks = [];
 
@@ -309,6 +329,10 @@
             initializing = false;
         }
 
+        function updateQuitIcon() {
+            document.getElementById('js-quit').querySelector('.icon').className = 'Button-icon icon fas fa-' + (quitting ? 'spinner fa-pulse' : 'sign-out-alt');
+        }
+
         function updateRestartIcon() {
             document.getElementById('js-restart').querySelector('.icon').className = 'Button-icon icon fas fa-' + (restarting ? 'spinner fa-pulse' : 'redo');
         }
@@ -345,13 +369,39 @@
             startGame();
         });
 
+        @if ($autoload)
+        document.getElementById('js-load').style.display = 'none';
+        startGame();
+        @endif
+
         document.getElementById('js-quit').addEventListener('click', function () {
+            if (quitting && confirm(@json($translator->trans('clarkwinkelmann-godot-embed.embed.force-quit')))) {
+                setStatusMode('indeterminate');
+
+                // On next page load, never run automatically
+                url.searchParams.delete('autoload');
+
+                window.location.href = url.href;
+
+                return;
+            }
+
             engine.requestQuit()
+
+            quitting = true;
+            updateQuitIcon();
         });
 
         document.getElementById('js-restart').addEventListener('click', function () {
             if (restarting && confirm(@json($translator->trans('clarkwinkelmann-godot-embed.embed.force-quit')))) {
-                window.location.reload();
+                setStatusMode('indeterminate');
+
+                const url = new URL(window.location.href);
+
+                // On next page load, run automatically
+                url.searchParams.set('autoload', '1');
+
+                window.location.href = url.href;
 
                 return;
             }

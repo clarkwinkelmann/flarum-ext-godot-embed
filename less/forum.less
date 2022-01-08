@@ -20,57 +20,50 @@
         height: 100%;
         left: 0;
         top: 0;
+        border: none;
     }
 }
 
-// The actual height of the element isn't super important because the items are aligned at the bottom
-// But it needs to be tall enough to hide the buttons when it slides out of screen
-@godot-toolbar-height: 52px;
+@godot-toolbar-width: 200px;
+
+.godot-toolbar,
+.godot-toolbar-handle {
+    background: rgba(0, 0, 0, 0.5);
+}
 
 .godot-toolbar {
-    height: @godot-toolbar-height;
+    color: white;
+    width: @godot-toolbar-width;
+    border-radius: 5px 0 0 0;
     position: fixed;
-    left: 0;
-    right: 0;
-    bottom: @godot-toolbar-height * -1;
-    display: flex;
-    align-items: end;
-    justify-content: right;
-    transition: bottom 0.3s;
-    pointer-events: none;
+    right: @godot-toolbar-width * -1;
+    bottom: 20px;
+    transition: right 0.3s;
+    padding: 5px;
 
     .Button {
-        .Button--color(white, rgba(0, 0, 0, 0.7));
+        .Button--color(white, transparent);
 
-        margin: 0 5px 5px 0;
-        pointer-events: visible;
-    }
+        text-align: left;
 
-    // On phone, always show toolbar
-    // Can't use built-in @phone query because it looks for iframe size instead of device size
-    @media (max-device-width: @screen-phone-max) {
-        bottom: 0;
-    }
-
-    body:hover & {
-        bottom: 0;
-    }
-
-    // Make buttons bigger, but not on mobile
-    @media (min-device-width: @screen-phone-max) {
-        .Button {
-            font-size: 30px;
-
-            &.Button--icon {
-                width: 46px;
-                padding: 8px;
-            }
-        }
-
-        .Button-icon {
-            font-size: 30px;
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.8);
         }
     }
+
+    &:hover {
+        right: 0;
+    }
+}
+
+.godot-toolbar-handle {
+    border-radius: 5px 0 0 5px;
+    position: absolute;
+    bottom: 0;
+    right: @godot-toolbar-width;
+    width: 20px;
+    height: 50px;
+    padding-top: 15px; // To center icon vertically
 }
 
 .godot-start {
@@ -100,6 +93,7 @@
 .godot-mobile-compatibility {
     display: none;
 
+    // Can't use built-in @phone query because it looks for iframe size instead of device size
     @media (max-device-width: @screen-phone-max) {
         display: block;
     }

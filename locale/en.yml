@@ -16,6 +16,7 @@ clarkwinkelmann-godot-embed:
         fullscreen-not-available: Full screen not available on this device
         force-quit: Game did not quit properly. Force restart?
         load-game: Click to load game
+        quit-game: Quit game
         restart-game: Restart game
         full-screen: Full screen
         mobile-incompatible: This game is not designed for mobile.

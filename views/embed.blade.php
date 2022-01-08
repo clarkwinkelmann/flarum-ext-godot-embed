@@ -166,13 +166,20 @@
     </div>
 </div>
 <div class="godot-toolbar">
-    <button class="Button Button--icon" id="js-restart"
-            title="{{ $translator->trans('clarkwinkelmann-godot-embed.embed.restart-game') }}">
-        <i class="Button-icon icon fas fa-redo"></i>
+    <div class="godot-toolbar-handle">
+        <i class="fas fa-caret-left"></i>
+    </div>
+    <button class="Button Button--block" onclick="engine.requestQuit()">
+        <i class="Button-icon icon fas fa-sign-out-alt"></i>
+        <span class="Button-label">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.quit-game') }}</span>
     </button>
-    <button class="Button Button--icon" id="js-fullscreen"
-            title="{{ $translator->trans('clarkwinkelmann-godot-embed.embed.full-screen') }}">
+    <button class="Button Button--block" id="js-restart">
+        <i class="Button-icon icon fas fa-redo"></i>
+        <span class="Button-label">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.restart-game') }}</span>
+    </button>
+    <button class="Button Button--block" id="js-fullscreen">
         <i class="Button-icon icon fas fa-expand"></i>
+        <span class="Button-label">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.full-screen') }}</span>
     </button>
 </div>
 <div class="AlertManager godot-mobile-compatibility" id="js-mobile-compatibility">

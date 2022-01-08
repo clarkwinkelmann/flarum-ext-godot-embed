@@ -72,6 +72,8 @@ class Embed implements RequestHandlerInterface
             $basePath . '.wasm' => (int)$this->settings->get('godot-embed.wasmFileSize'),
         ];
 
+        $consolePrefix = '[Godot ' . basename($url) . ']';
+
         return new HtmlResponse(
             $this->view->make('godot-embed::embed')
                 ->with('url', $url)
@@ -82,6 +84,7 @@ class Embed implements RequestHandlerInterface
                 ->with('cssPath', $cssPath)
                 ->with('javascriptPath', $javascriptPath)
                 ->with('basePath', $basePath)
+                ->with('consolePrefix', $consolePrefix)
                 ->render()
         );
     }

@@ -225,6 +225,13 @@
                     document.exitFullscreen();
                 }
             },
+            onPrint: function () {
+                // Same as default but with prefix
+                console.log.apply(console, [@json($consolePrefix)].concat(Array.from(arguments)));
+            },
+            onPrintError: function (var_args) {
+                console.error.apply(console, [@json($consolePrefix)].concat(Array.from(arguments)));
+            },
         });
 
         const INDETERMINATE_STATUS_STEP_MS = 100;

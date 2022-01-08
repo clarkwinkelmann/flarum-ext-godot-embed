@@ -69,6 +69,7 @@ class Embed implements RequestHandlerInterface
             $this->view->make('godot-embed::embed')
                 ->with('url', Arr::get($params, 'url'))
                 ->with('cover', Arr::get($params, 'cover'))
+                ->with('mobileCompatible', (bool)Arr::get($params, 'mobile'))
                 ->with('args', $args)
                 ->with('cssPath', $cssPath)
                 ->with('javascriptPath', $javascriptPath)

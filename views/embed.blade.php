@@ -175,6 +175,17 @@
         <i class="Button-icon icon fas fa-expand"></i>
     </button>
 </div>
+<div class="AlertManager godot-mobile-compatibility" id="js-mobile-compatibility">
+    @unless($mobileCompatible)
+        <div class="AlertManager-alert">
+            <div class="Alert Alert--danger">
+            <span class="Alert-body">
+                {{ $translator->trans('clarkwinkelmann-godot-embed.embed.mobile-incompatible') }}
+            </span>
+            </div>
+        </div>
+    @endunless
+</div>
 
 <script type="text/javascript" src="{{ $javascriptPath }}"></script>
 <script type="text/javascript">//<![CDATA[
@@ -182,7 +193,6 @@
 
     (function () {
         const INDETERMINATE_STATUS_STEP_MS = 100;
-        const canvas = document.getElementById('canvas');
         const statusProgress = document.getElementById('status-progress');
         const statusProgressInner = document.getElementById('status-progress-inner');
         const statusIndeterminate = document.getElementById('status-indeterminate');
@@ -262,6 +272,9 @@
         }
 
         function startGame() {
+            // Hide compatibility message if user decides to start game anyway
+            document.getElementById('js-mobile-compatibility').style.display = 'none';
+
             if (!Engine.isWebGLAvailable()) {
                 displayFailureNotice(@json($translator->trans('clarkwinkelmann-godot-embed.embed.webgl-not-available')));
             } else {
@@ -299,6 +312,8 @@
                                 // If the game quits by itself, we go back to the loading screen
                                 // that way the canvas doesn't continue to show a frozen image
                                 document.getElementById('js-load').style.display = 'block';
+
+                                document.exitFullscreen();
                             }
                         },
                     }).then(() => {
@@ -317,9 +332,7 @@
 
         document.getElementById('js-restart').addEventListener('click', function () {
             if (restarting && confirm(@json($translator->trans('clarkwinkelmann-godot-embed.embed.force-quit')))) {
-                engine.unload();
-
-                loadGame();
+                window.location.reload();
 
                 return;
             }

@@ -18,3 +18,4 @@ clarkwinkelmann-godot-embed:
         load-game: Click to load game
         restart-game: Restart game
         full-screen: Full screen
+        mobile-incompatible: This game is not designed for mobile.

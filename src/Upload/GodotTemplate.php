@@ -24,6 +24,6 @@ class GodotTemplate implements Template
 
     public function preview(File $file): string
     {
-        return '[godot]' . $file->url . '[/godot]';
+        return '[godot filesize=' . $file->size . ']' . $file->url . '[/godot]';
     }
 }

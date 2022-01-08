@@ -169,7 +169,7 @@
     <div class="godot-toolbar-handle">
         <i class="fas fa-caret-left"></i>
     </div>
-    <button class="Button Button--block" onclick="engine.requestQuit()">
+    <button class="Button Button--block" id="js-quit">
         <i class="Button-icon icon fas fa-sign-out-alt"></i>
         <span class="Button-label">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.quit-game') }}</span>
     </button>
@@ -196,9 +196,37 @@
 
 <script type="text/javascript" src="{{ $javascriptPath }}"></script>
 <script type="text/javascript">//<![CDATA[
-    const engine = new Engine({});
-
     (function () {
+        const engine = new Engine({
+            args: @json($args),
+            fileSizes: @json($fileSizes),
+            onProgress: function (current, total) {
+                if (total > 0) {
+                    statusProgressInner.style.width = current / total * 100 + '%';
+                    setStatusMode('progress');
+                    if (current === total) {
+                        // wait for progress bar animation
+                        setTimeout(() => {
+                            setStatusMode('indeterminate');
+                        }, 500);
+                    }
+                } else {
+                    setStatusMode('indeterminate');
+                }
+            },
+            onExit: function () {
+                if (restarting) {
+                    startGame();
+                } else {
+                    // If the game quits by itself, we go back to the loading screen
+                    // that way the canvas doesn't continue to show a frozen image
+                    document.getElementById('js-load').style.display = 'flex';
+
+                    document.exitFullscreen();
+                }
+            },
+        });
+
         const INDETERMINATE_STATUS_STEP_MS = 100;
         const statusProgress = document.getElementById('status-progress');
         const statusProgressInner = document.getElementById('status-progress-inner');
@@ -296,34 +324,7 @@
                     restarting = false;
                     updateRestartIcon();
 
-                    return engine.start({
-                        args: @json($args),
-                        onProgress: function (current, total) {
-                            if (total > 0) {
-                                statusProgressInner.style.width = current / total * 100 + '%';
-                                setStatusMode('progress');
-                                if (current === total) {
-                                    // wait for progress bar animation
-                                    setTimeout(() => {
-                                        setStatusMode('indeterminate');
-                                    }, 500);
-                                }
-                            } else {
-                                setStatusMode('indeterminate');
-                            }
-                        },
-                        onExit: function () {
-                            if (restarting) {
-                                startGame();
-                            } else {
-                                // If the game quits by itself, we go back to the loading screen
-                                // that way the canvas doesn't continue to show a frozen image
-                                document.getElementById('js-load').style.display = 'flex';
-
-                                document.exitFullscreen();
-                            }
-                        },
-                    }).then(() => {
+                    return engine.start({}).then(() => {
                         setStatusMode('hidden');
                         initializing = false;
                     }, displayFailureNotice);
@@ -335,6 +336,10 @@
             this.style.display = 'none';
 
             startGame();
+        });
+
+        document.getElementById('js-quit').addEventListener('click', function () {
+            engine.requestQuit()
         });
 
         document.getElementById('js-restart').addEventListener('click', function () {

@@ -65,12 +65,20 @@ class Embed implements RequestHandlerInterface
             $args = array_merge($args, $newArgs);
         }
 
+        $url = Arr::get($params, 'url');
+
+        $fileSizes = [
+            $url => (int)Arr::get($params, 'filesize'),
+            $basePath . '.wasm' => (int)$this->settings->get('godot-embed.wasmFileSize'),
+        ];
+
         return new HtmlResponse(
             $this->view->make('godot-embed::embed')
-                ->with('url', Arr::get($params, 'url'))
+                ->with('url', $url)
                 ->with('cover', Arr::get($params, 'cover'))
                 ->with('mobileCompatible', (bool)Arr::get($params, 'mobile'))
                 ->with('args', $args)
+                ->with('fileSizes', $fileSizes)
                 ->with('cssPath', $cssPath)
                 ->with('javascriptPath', $javascriptPath)
                 ->with('basePath', $basePath)

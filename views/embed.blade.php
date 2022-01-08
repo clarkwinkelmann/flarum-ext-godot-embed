@@ -318,7 +318,7 @@
                             } else {
                                 // If the game quits by itself, we go back to the loading screen
                                 // that way the canvas doesn't continue to show a frozen image
-                                document.getElementById('js-load').style.display = 'block';
+                                document.getElementById('js-load').style.display = 'flex';
 
                                 document.exitFullscreen();
                             }

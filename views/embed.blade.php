@@ -278,6 +278,7 @@
 
                     return engine.start({
                         args: @json($args),
+                        fileSizes: []
                         onProgress: function (current, total) {
                             if (total > 0) {
                                 statusProgressInner.style.width = current / total * 100 + '%';
@@ -298,6 +299,7 @@
                             } else {
                                 // If the game quits by itself, we go back to the loading screen
                                 // that way the canvas doesn't continue to show a frozen image
+                                document.exitFullscreen();
                                 document.getElementById('js-load').style.display = 'block';
                             }
                         },
@@ -341,8 +343,20 @@
             }
 
             // Safari
-            if (canvas.webkitRequestFullscreen) {
-                canvas.webkitRequestFullscreen();
+            if (canvas.webkitRequestFullScreen) {
+                canvas.webkitRequestFullScreen();
+                return;
+            }
+            
+            // Firefox
+            if (canvas.mozRequestFullScreen) {
+                canvas.mozRequestFullScreen();
+                return;
+            }
+            
+            // Legacy-Edge/IE
+            if (canvas.msRequestFullscreen) {
+                canvas.msRequestFullscreen();
                 return;
             }
 

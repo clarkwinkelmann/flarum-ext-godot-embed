@@ -68,6 +68,7 @@ class Embed implements RequestHandlerInterface
         return new HtmlResponse(
             $this->view->make('godot-embed::embed')
                 ->with('url', Arr::get($params, 'url'))
+                ->with('pck_size', Arr::get($params, 'pck_size'))
                 ->with('cover', Arr::get($params, 'cover'))
                 ->with('args', $args)
                 ->with('cssPath', $cssPath)

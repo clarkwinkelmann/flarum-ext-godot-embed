@@ -41,6 +41,13 @@
     transition: right 0.3s;
     padding: 5px;
 
+    // There are issues on mobile where clicking the handle might click the full screen button
+    // Let's try to work around it by removing animation and moving the button so it doesn't align with the handle
+    @media (max-device-width: @screen-phone-max) {
+        transition: none;
+        padding-right: 25px; // Same as the width of the handle + padding
+    }
+
     .Button {
         .Button--color(white, transparent);
 

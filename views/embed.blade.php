@@ -377,7 +377,9 @@
         document.getElementById('js-quit').addEventListener('click', function () {
             if (quitting && confirm(@json($translator->trans('clarkwinkelmann-godot-embed.embed.force-quit')))) {
                 setStatusMode('indeterminate');
-
+                
+                const url = new URL(window.location.href);
+                
                 // On next page load, never run automatically
                 url.searchParams.delete('autoload');
 

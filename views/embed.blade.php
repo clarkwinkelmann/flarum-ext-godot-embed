@@ -352,21 +352,27 @@
             // The game will restart inside onExit callback
         });
 
+        function fullscreenFallback() {
+            if (confirm(@json($translator->trans('clarkwinkelmann-godot-embed.embed.fullscreen-not-available')))) {
+                window.open(window.location.href);
+            }
+        }
+
         document.getElementById('js-fullscreen').addEventListener('click', function () {
             const canvas = document.getElementById('canvas');
 
             if (canvas.requestFullscreen) {
-                canvas.requestFullscreen();
+                canvas.requestFullscreen().catch(fullscreenFallback);
                 return;
             }
 
             // Safari
             if (canvas.webkitRequestFullscreen) {
-                canvas.webkitRequestFullscreen();
+                canvas.webkitRequestFullscreen().catch(fullscreenFallback);
                 return;
             }
 
-            alert(@json($translator->trans('clarkwinkelmann-godot-embed.embed.fullscreen-not-available')));
+            fullscreenFallback();
         });
     })();
 

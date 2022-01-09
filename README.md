@@ -6,9 +6,20 @@ This extension adds a `[godot]<URL to pck file>[/godot]` bbcode to Flarum that r
 
 The bbcode is registered into FoF Upload as a template.
 
-Before you can use the extension, you need to download the templates from https://godotengine.org/download and host the `webassembly_release.zip` files inside somewhere on your server.
+bbcode parameters (all optional):
+
+- `filesize=INT`: `pck` file size in bytes. Automatically populated when using FoF Upload. Necessary for progress bar to be visible.
+- `cover=URL`: URL to an image file that will be rendered as background before the game is loaded.
+- `args=TEXT`: Arguments to pass to Godot Engine. Will be parsed similarly to command line arguments and merged with `--main-pack` argument.
+- `width=NUMBER` (default 600): Width of embedded player in pixels.
+- `height=NUMBER` (default 400): Height of embedded player in pixels. Design is responsive, if the player is resized down, the ratio will be preserved.
+- `mobile=1`: Hides the "not compatible with mobile" message.
+- `autoload=1`: Loads the game without needing to click in iframe.
+
+Before you can use the extension, you need to download the templates from https://godotengine.org/download and host the `webassembly_release.zip` files somewhere on your server.
 Then provide the public URL to that folder in the "Base path" setting in the admin panel.
 For example, you can extract to `<Flarum installation>/public/assets/godot` and set `/assets/godot` in the setting.
+Optionally add the size of the wasm file in bytes in the corresponding setting for the progress bar to render.
 
 **This extension doesn't provide any built-in security!**
 For use in production, make sure the engine and game files are accessed through a CDN URL that doesn't allow access to Flarum cookies.
@@ -24,7 +35,18 @@ You should add Apache or nginx rewrites for the following URLs:
 
 - `/godot-embed` on main Flarum domain: block access with 401 or 404. Prevents abuse because it can load arbitrary files via query parameter.
 - `/assets/files/*` on main Flarum domain: block access with 401 or 404 (when using FoF Upload `local` adapter). Malicious actors could use the liberal file validation to upload HTML files and trick users to visit for XSS.
-- `/` (or anything except `/godot-embed` and `/assets/files/*`) on sandbox domain: redirect to main domain. This prevents anyone from accidentally trying to login on wrong domain or search engines from indexing duplicate content.
+- `/` (or anything except `/godot-embed` and `/assets/*`) on sandbox domain: redirect to main domain. This prevents anyone from accidentally trying to login on wrong domain or search engines from indexing duplicate content.
+
+The resources are loaded like this:
+
+- Browser: **[Flarum domain]** / Discussion
+  - Iframe: **[Sandbox domain]** `/godot-embed?url=<pck url>&cover=<cover url>`
+    - **[Sandbox domain]** / Flarum CSS
+    - **[Sandbox domain]** / Flarum Fonts
+    - **[Base path]** / Godot Engine
+    - **[Base path]** / Godot WASM
+    - `<Pck url>`
+    - `<Cover url>`
 
 ## Installation
 

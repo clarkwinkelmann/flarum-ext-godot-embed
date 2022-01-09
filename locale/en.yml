@@ -9,14 +9,12 @@ clarkwinkelmann-godot-embed:
             iframeHostHelp: >
                 By default the iframe is served from Flarum domain, but this leaves the website vulnerable to XSS attacks.
                 Make Flarum accessible through an alternate domain that doesn't have access to cookies from the canonical URL and provide the full domain name here (no protocol).
-        permission:
-            collapse: Collapse posts
     embed:
         title: Godot Embedded Player # Not usually visible but it might be shown by the browser in alerts coming from the iframe
         canvas-unsupported: HTML5 canvas appears to be unsupported in the current browser. Try updating or use a different browser.
         webgl-not-available: WebGL not available
         fullscreen-not-available: Full screen is not available on this device. Do you want to open the game in a new tab?
-        force-quit: Game did not quit properly. Force restart?
+        force-quit: Game did not quit properly. Force quit?
         load-game: Click to load game
         quit-game: Quit game
         restart-game: Restart game

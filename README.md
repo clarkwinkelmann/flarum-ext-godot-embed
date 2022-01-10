@@ -13,8 +13,9 @@ bbcode parameters (all optional):
 - `args=TEXT`: Arguments to pass to Godot Engine. Will be parsed similarly to command line arguments and merged with `--main-pack` argument.
 - `width=NUMBER` (default 600): Width of embedded player in pixels.
 - `height=NUMBER` (default 400): Height of embedded player in pixels. Design is responsive, if the player is resized down, the ratio will be preserved.
-- `mobile=1`: Hides the "not compatible with mobile" message.
+- `touch=1`: Hides the "not compatible with touch devices" message.
 - `autoload=1`: Loads the game without needing to click in iframe.
+- `toolbar=left|right|hidden` (default: `right`): Changes on which side of the player the toolbar is inserted. `hidden` removes the toolbar completely (there will be no way to go full screen or restart).
 
 Before you can use the extension, you need to download the templates from https://godotengine.org/download and host the `webassembly_release.zip` files somewhere on your server.
 Then provide the public URL to that folder in the "Base path" setting in the admin panel.

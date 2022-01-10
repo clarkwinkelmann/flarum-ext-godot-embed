@@ -177,7 +177,7 @@
         <i class="Button-icon icon fas fa-redo"></i>
         <span class="Button-label">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.restart-game') }}</span>
     </button>
-    <button class="Button Button--block" id="js-fullscreen">
+    <button class="Button Button--block" id="js-fullscreen" style="@if ($fullscreenDisabled) display: none; @endif">
         <i class="Button-icon icon fas fa-expand"></i>
         <span class="Button-label">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.full-screen') }}</span>
     </button>
@@ -376,14 +376,22 @@
         startGame();
         @endif
 
+        function modifiedUrl(callback) {
+            const url = new URL(window.location.href);
+
+            callback(url.searchParams);
+
+            return url.href;
+        }
+
         document.getElementById('js-quit').addEventListener('click', function () {
             if (quitting && confirm(@json($translator->trans('clarkwinkelmann-godot-embed.embed.force-quit')))) {
                 setStatusMode('indeterminate');
 
-                // On next page load, never run automatically
-                url.searchParams.delete('autoload');
-
-                window.location.href = url.href;
+                window.location.href = modifiedUrl(searchParams => {
+                    // On next page load, never run automatically
+                    searchParams.delete('autoload');
+                });
 
                 return;
             }
@@ -398,12 +406,10 @@
             if (restarting && confirm(@json($translator->trans('clarkwinkelmann-godot-embed.embed.force-quit')))) {
                 setStatusMode('indeterminate');
 
-                const url = new URL(window.location.href);
-
-                // On next page load, run automatically
-                url.searchParams.set('autoload', '1');
-
-                window.location.href = url.href;
+                window.location.href = modifiedUrl(searchParams => {
+                    // On next page load, run automatically
+                    searchParams.set('autoload', '1');
+                });
 
                 return;
             }
@@ -418,7 +424,13 @@
 
         function fullscreenFallback() {
             if (confirm(@json($translator->trans('clarkwinkelmann-godot-embed.embed.fullscreen-not-available')))) {
-                window.open(window.location.href);
+                window.open(modifiedUrl(searchParams => {
+                    // Run automatically in new tab
+                    searchParams.set('autoload', '1');
+
+                    // Do not offer fullscreen button when the tab is already used as a substitute for fullscreen
+                    searchParams.set('fullscreen', 'disabled');
+                }));
             }
         }
 

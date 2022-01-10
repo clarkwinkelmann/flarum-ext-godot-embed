@@ -201,6 +201,7 @@
         const engine = new Engine({
             args: @json($args),
             fileSizes: @json($fileSizes),
+            experimentalVK: true,
             onProgress: function (current, total) {
                 if (total > 0) {
                     statusProgressInner.style.width = current / total * 100 + '%';

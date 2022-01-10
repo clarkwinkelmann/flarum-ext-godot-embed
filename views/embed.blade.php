@@ -57,6 +57,7 @@
 
         #status-progress {
             width: 366px;
+            max-width: 80%;
             height: 7px;
             background-color: #38363A;
             border: 1px solid #444246;

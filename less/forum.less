@@ -41,13 +41,6 @@
     transition: right 0.3s;
     padding: 5px;
 
-    // There are issues on mobile where clicking the handle might click the full screen button
-    // Let's try to work around it by removing animation and moving the button so it doesn't align with the handle
-    @media (max-device-width: @screen-phone-max) {
-        transition: none;
-        padding-right: 25px; // Same as the width of the handle + padding
-    }
-
     .Button {
         .Button--color(white, transparent);
 
@@ -58,7 +51,8 @@
         }
     }
 
-    &:hover {
+    .no-touch &:hover,
+    &.open {
         right: 0;
     }
 }
@@ -70,7 +64,20 @@
     right: @godot-toolbar-width;
     width: 20px;
     height: 50px;
-    padding-top: 15px; // To center icon vertically
+    border: none; // Cancel browser style
+
+    // Not sure which, but an extension is overriding this style so we need to be super specific
+    i.fas.fa-caret-left {
+        color: white;
+    }
+
+    .open & i::before {
+        content: @fa-var-caret-right;
+    }
+
+    .touch & {
+        cursor: pointer;
+    }
 }
 
 .godot-start {
@@ -98,10 +105,12 @@
 }
 
 .godot-mobile-compatibility {
-    display: none;
+    // Make message centered
+    left: 0;
+    right: 0;
 
-    // Can't use built-in @phone query because it looks for iframe size instead of device size
-    @media (max-device-width: @screen-phone-max) {
-        display: block;
+    // Only show message if the device supports touch
+    .no-touch & {
+        display: none;
     }
 }

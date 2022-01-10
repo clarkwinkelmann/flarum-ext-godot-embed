@@ -165,10 +165,10 @@
         <div>{{ $translator->trans('clarkwinkelmann-godot-embed.embed.load-game') }}</div>
     </div>
 </div>
-<div class="godot-toolbar">
-    <div class="godot-toolbar-handle">
+<div class="godot-toolbar" id="js-toolbar">
+    <button class="godot-toolbar-handle" id="js-toolbar-handle">
         <i class="fas fa-caret-left"></i>
-    </div>
+    </button>
     <button class="Button Button--block" id="js-quit">
         <i class="Button-icon icon fas fa-sign-out-alt"></i>
         <span class="Button-label">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.quit-game') }}</span>
@@ -196,6 +196,8 @@
 
 <script type="text/javascript" src="{{ $javascriptPath }}"></script>
 <script type="text/javascript">//<![CDATA[
+    document.body.classList.add('ontouchstart' in window ? 'touch' : 'no-touch');
+
     (function () {
         const engine = new Engine({
             args: @json($args),
@@ -435,6 +437,20 @@
             }
 
             fullscreenFallback();
+        });
+
+        const toolbar = document.getElementById('js-toolbar');
+
+        document.getElementById('js-toolbar-handle').addEventListener('click', function (event) {
+            event.stopPropagation(); // Prevent the global click handler from closing the toolbar on this click
+            event.preventDefault();
+
+            toolbar.classList.toggle('open');
+        });
+
+        // Close toolbar when clicking anywhere, including buttons inside of the toolbar
+        document.addEventListener('click', function () {
+            toolbar.classList.remove('open');
         });
     })();
 

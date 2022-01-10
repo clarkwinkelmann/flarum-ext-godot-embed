@@ -93,7 +93,7 @@ class Embed implements RequestHandlerInterface
             $this->view->make('godot-embed::embed')
                 ->with('url', $url)
                 ->with('cover', Arr::get($params, 'cover'))
-                ->with('mobileCompatible', (bool)Arr::get($params, 'mobile'))
+                ->with('touchCompatible', (bool)Arr::get($params, 'touch'))
                 ->with('autoload', (bool)Arr::get($params, 'autoload'))
                 ->with('fullscreenDisabled', Arr::get($params, 'fullscreen') === 'disabled')
                 ->with('backgroundColor', $this->settings->get('godot-embed.backgroundColor') ?: '#000')

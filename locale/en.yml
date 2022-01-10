@@ -23,4 +23,4 @@ clarkwinkelmann-godot-embed:
         quit-game: Quit game
         restart-game: Restart game
         full-screen: Full screen
-        mobile-incompatible: This game is not designed for mobile.
+        touch-incompatible: This game is not designed for touch devices

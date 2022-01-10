@@ -181,12 +181,12 @@
         <span class="Button-label">{{ $translator->trans('clarkwinkelmann-godot-embed.embed.full-screen') }}</span>
     </button>
 </div>
-<div class="AlertManager godot-mobile-compatibility" id="js-mobile-compatibility">
-    @unless($mobileCompatible)
+<div class="AlertManager godot-touch-compatibility" id="js-touch-compatibility">
+    @unless($touchCompatible)
         <div class="AlertManager-alert">
             <div class="Alert Alert--danger">
             <span class="Alert-body">
-                {{ $translator->trans('clarkwinkelmann-godot-embed.embed.mobile-incompatible') }}
+                {{ $translator->trans('clarkwinkelmann-godot-embed.embed.touch-incompatible') }}
             </span>
             </div>
         </div>
@@ -341,7 +341,7 @@
 
         function startGame() {
             // Hide compatibility message if user decides to start game anyway
-            document.getElementById('js-mobile-compatibility').style.display = 'none';
+            document.getElementById('js-touch-compatibility').style.display = 'none';
 
             if (!Engine.isWebGLAvailable()) {
                 displayFailureNotice(@json($translator->trans('clarkwinkelmann-godot-embed.embed.webgl-not-available')));

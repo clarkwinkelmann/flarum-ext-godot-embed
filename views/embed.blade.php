@@ -161,12 +161,10 @@
     <div id="status-notice" class="godot" style="display: none;"></div>
 </div>
 <div class="godot-start" id="js-load" title="{{ $translator->trans('clarkwinkelmann-godot-embed.embed.load-game') }}"
-     style="@if ($cover) background-image: url({{ $cover }}) @endif">
-    <div class="godot-start-circle">
-        <i class="icon fas fa-play"></i>
-    </div>
+     style="background-color: {{ $backgroundColor }}; @if ($cover) background-image: url({{ $cover }}); @endif">
+    <i class="icon fas fa-play-circle"></i>
 </div>
-<div class="godot-toolbar {{ $toolbarClass }}" id="js-toolbar">
+<div class="godot-toolbar{{ $toolbarClass }}" id="js-toolbar">
     <button class="godot-toolbar-handle" id="js-toolbar-handle">
         <i class="fas fa-caret-left"></i>
     </button>

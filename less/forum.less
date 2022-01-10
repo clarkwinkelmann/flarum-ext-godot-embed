@@ -51,7 +51,7 @@
         }
     }
 
-    .no-touch &:hover,
+    .no-touch &.hover-enabled:hover,
     &.open {
         right: 0;
     }
@@ -66,7 +66,7 @@
             content: @fa-var-caret-right;
         }
 
-        .no-touch &:hover,
+        .no-touch &.hover-enabled:hover,
         &.open {
             right: auto;
             left: 0;
@@ -86,6 +86,7 @@
     width: 20px;
     height: 50px;
     border: none; // Cancel browser style
+    cursor: pointer;
 
     .left-side & {
         border-radius: 0 5px 5px 0;
@@ -105,10 +106,6 @@
     .open.left-side & i::before {
         content: @fa-var-caret-left;
     }
-
-    .touch & {
-        cursor: pointer;
-    }
 }
 
 .godot-start {
@@ -119,7 +116,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -128,24 +126,12 @@
     background-position: center center;
 
     .icon {
-        display: block;
-        font-size: 50px;
-        margin-right: -8px; // It feels more centered when the icon is actually not correctly centered
+        font-size: 80px;
     }
 
-    &:hover .godot-start-circle {
-        background: rgba(220, 220, 220, 0.6);
+    &:hover {
+        color: rgba(230, 230, 230, 0.8);
     }
-}
-
-.godot-start-circle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 80px;
-    border-radius: 100%;
-    background: rgba(255, 255, 255, 0.6);
 }
 
 .godot-mobile-compatibility {

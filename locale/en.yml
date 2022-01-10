@@ -9,6 +9,10 @@ clarkwinkelmann-godot-embed:
             iframeHostHelp: >
                 By default the iframe is served from Flarum domain, but this leaves the website vulnerable to XSS attacks.
                 Make Flarum accessible through an alternate domain that doesn't have access to cookies from the canonical URL and provide the full domain name here (no protocol).
+            backgroundColor: Loading screen background color
+            backgroundColorHelp: Any valid CSS color value
+            toolbarHover: Open toolbar on hover on non-touch devices
+            toolbarHoverHelp: If disabled, toolbar can only be open by click
     embed:
         title: Godot Embedded Player # Not usually visible but it might be shown by the browser in alerts coming from the iframe
         canvas-unsupported: HTML5 canvas appears to be unsupported in the current browser. Try updating or use a different browser.

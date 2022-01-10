@@ -78,11 +78,15 @@ class Embed implements RequestHandlerInterface
 
         switch (Arr::get($params, 'toolbar')) {
             case 'left':
-                $toolbarClass = 'left-side';
+                $toolbarClass .= ' left-side';
                 break;
             case 'hidden':
-                $toolbarClass = 'hidden';
+                $toolbarClass .= ' hidden';
                 break;
+        }
+
+        if ($this->settings->get('godot-embed.toolbarHover')) {
+            $toolbarClass .= ' hover-enabled';
         }
 
         return new HtmlResponse(
@@ -92,6 +96,7 @@ class Embed implements RequestHandlerInterface
                 ->with('mobileCompatible', (bool)Arr::get($params, 'mobile'))
                 ->with('autoload', (bool)Arr::get($params, 'autoload'))
                 ->with('fullscreenDisabled', Arr::get($params, 'fullscreen') === 'disabled')
+                ->with('backgroundColor', $this->settings->get('godot-embed.backgroundColor') ?: '#000')
                 ->with('args', $args)
                 ->with('fileSizes', $fileSizes)
                 ->with('cssPath', $cssPath)

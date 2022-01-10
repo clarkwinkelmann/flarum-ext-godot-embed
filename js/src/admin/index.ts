@@ -21,5 +21,17 @@ app.initializers.add('godot-embed', () => {
             setting: 'godot-embed.iframeHost',
             label: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.iframeHost'),
             help: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.iframeHostHelp'),
+        })
+        .registerSetting({
+            type: 'color',
+            setting: 'godot-embed.backgroundColor',
+            label: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.backgroundColor'),
+            help: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.backgroundColorHelp'),
+        })
+        .registerSetting({
+            type: 'switch',
+            setting: 'godot-embed.toolbarHover',
+            label: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.toolbarHover'),
+            help: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.toolbarHoverHelp'),
         });
 });

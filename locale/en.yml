@@ -15,7 +15,7 @@ clarkwinkelmann-godot-embed:
         webgl-not-available: WebGL not available
         fullscreen-not-available: Full screen is not available on this device. Do you want to open the game in a new tab?
         force-quit: Game did not quit properly. Force quit?
-        load-game: Click to load game
+        load-game: Click to load
         quit-game: Quit game
         restart-game: Restart game
         full-screen: Full screen

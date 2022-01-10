@@ -88,7 +88,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    color: white;
+    color: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -96,12 +96,25 @@
     background-size: cover;
     background-position: center center;
 
-    font-size: 2em;
-
     .icon {
-        font-size: 2em;
-        margin-bottom: 30px;
+        display: block;
+        font-size: 50px;
+        margin-right: -8px; // It feels more centered when the icon is actually not correctly centered
     }
+
+    &:hover .godot-start-circle {
+        background: rgba(220, 220, 220, 0.6);
+    }
+}
+
+.godot-start-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    background: rgba(255, 255, 255, 0.6);
 }
 
 .godot-mobile-compatibility {

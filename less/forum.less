@@ -55,6 +55,27 @@
     &.open {
         right: 0;
     }
+
+    &.left-side {
+        border-radius: 0 5px 0 0;
+        right: auto;
+        left: @godot-toolbar-width * -1;
+        transition: left 0.3s;
+
+        .godot-toolbar-handle i::before {
+            content: @fa-var-caret-right;
+        }
+
+        .no-touch &:hover,
+        &.open {
+            right: auto;
+            left: 0;
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
 }
 
 .godot-toolbar-handle {
@@ -66,6 +87,12 @@
     height: 50px;
     border: none; // Cancel browser style
 
+    .left-side & {
+        border-radius: 0 5px 5px 0;
+        right: auto;
+        left: @godot-toolbar-width;
+    }
+
     // Not sure which, but an extension is overriding this style so we need to be super specific
     i.fas.fa-caret-left {
         color: white;
@@ -73,6 +100,10 @@
 
     .open & i::before {
         content: @fa-var-caret-right;
+    }
+
+    .open.left-side & i::before {
+        content: @fa-var-caret-left;
     }
 
     .touch & {

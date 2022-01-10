@@ -166,7 +166,7 @@
         <i class="icon fas fa-play"></i>
     </div>
 </div>
-<div class="godot-toolbar" id="js-toolbar">
+<div class="godot-toolbar {{ $toolbarClass }}" id="js-toolbar">
     <button class="godot-toolbar-handle" id="js-toolbar-handle">
         <i class="fas fa-caret-left"></i>
     </button>

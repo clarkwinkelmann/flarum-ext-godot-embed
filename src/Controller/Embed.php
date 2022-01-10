@@ -74,6 +74,17 @@ class Embed implements RequestHandlerInterface
 
         $consolePrefix = '[Godot ' . basename($url) . ']';
 
+        $toolbarClass = '';
+
+        switch (Arr::get($params, 'toolbar')) {
+            case 'left':
+                $toolbarClass = 'left-side';
+                break;
+            case 'hidden':
+                $toolbarClass = 'hidden';
+                break;
+        }
+
         return new HtmlResponse(
             $this->view->make('godot-embed::embed')
                 ->with('url', $url)
@@ -87,6 +98,7 @@ class Embed implements RequestHandlerInterface
                 ->with('javascriptPath', $javascriptPath)
                 ->with('basePath', $basePath)
                 ->with('consolePrefix', $consolePrefix)
+                ->with('toolbarClass', $toolbarClass)
                 ->render()
         );
     }

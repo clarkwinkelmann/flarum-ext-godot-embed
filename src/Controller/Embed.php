@@ -65,6 +65,12 @@ class Embed implements RequestHandlerInterface
             $args = array_merge($args, $newArgs);
         }
 
+        $cover = Arr::get($params, 'cover');
+
+        if (!$cover) {
+            $cover = $this->settings->get('godot-embed.coverFallback');
+        }
+
         $url = Arr::get($params, 'url');
 
         $fileSizes = [
@@ -92,7 +98,7 @@ class Embed implements RequestHandlerInterface
         return new HtmlResponse(
             $this->view->make('godot-embed::embed')
                 ->with('url', $url)
-                ->with('cover', Arr::get($params, 'cover'))
+                ->with('cover', $cover)
                 ->with('touchCompatible', (bool)Arr::get($params, 'touch'))
                 ->with('autoload', (bool)Arr::get($params, 'autoload'))
                 ->with('fullscreenDisabled', Arr::get($params, 'fullscreen') === 'disabled')

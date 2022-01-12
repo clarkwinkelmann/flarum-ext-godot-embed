@@ -25,8 +25,16 @@ app.initializers.add('godot-embed', () => {
         .registerSetting({
             type: 'color',
             setting: 'godot-embed.backgroundColor',
+            placeholder: '#000',
             label: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.backgroundColor'),
             help: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.backgroundColorHelp'),
+        })
+        .registerSetting({
+            type: 'text',
+            setting: 'godot-embed.coverFallback',
+            placeholder: 'https://example.com/image.jpg',
+            label: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.coverFallback'),
+            help: app.translator.trans('clarkwinkelmann-godot-embed.admin.settings.coverFallbackHelp'),
         })
         .registerSetting({
             type: 'switch',

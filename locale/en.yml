@@ -11,6 +11,8 @@ clarkwinkelmann-godot-embed:
                 Make Flarum accessible through an alternate domain that doesn't have access to cookies from the canonical URL and provide the full domain name here (no protocol).
             backgroundColor: Loading screen background color
             backgroundColorHelp: Any valid CSS color value
+            coverFallback: Cover image fallback URL
+            coverFallbackHelp: Optional. This URL will be used if no cover is provided in the bbcode
             toolbarHover: Open toolbar on hover on non-touch devices
             toolbarHoverHelp: If disabled, toolbar can only be open by click
     embed:

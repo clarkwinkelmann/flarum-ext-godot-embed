@@ -139,8 +139,11 @@
     left: 0;
     right: 0;
 
+    // Hide until the touch class is available
+    display: none;
+
     // Only show message if the device supports touch
-    .no-touch & {
-        display: none;
+    .touch & {
+        display: block;
     }
 }

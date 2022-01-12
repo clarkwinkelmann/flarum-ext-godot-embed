@@ -431,6 +431,14 @@
                     // Do not offer fullscreen button when the tab is already used as a substitute for fullscreen
                     searchParams.set('fullscreen', 'disabled');
                 }));
+
+                // Force quit this game to free up ressources
+                setTimeout(() => {
+                    window.location.href = modifiedUrl(searchParams => {
+                        // We refresh with the page with the goal of unloading the game, so we definitely don't want autoload
+                        searchParams.delete('autoload');
+                    });
+                }, 1000); // A little timeout to make sure it doesn't prevent the new tab from opening correctly
             }
         }
 

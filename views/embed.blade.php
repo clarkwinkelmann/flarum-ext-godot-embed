@@ -51,6 +51,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             /* don't consume click events - make children visible explicitly */
             visibility: hidden;
         }
@@ -82,6 +83,12 @@
             border: 1px solid #222223;
             box-shadow: 0 0 1px 1px #27282E;
             border-radius: 3px;
+        }
+
+        .godot-progress-stats {
+            visibility: visible;
+            color: #aaa;
+            margin-top: 20px;
         }
 
         #status-indeterminate {
@@ -148,6 +155,12 @@
     <div id="status-progress" style="display: none;" oncontextmenu="event.preventDefault();">
         <div id="status-progress-inner"></div>
     </div>
+    <div class="godot-progress-stats" id="js-progress-stats" style="display: none"
+         oncontextmenu="event.preventDefault();">
+        <span id="js-progress-current"></span>
+        <span id="js-progress-total"></span>
+        <span id="js-progress-speed"></span>
+    </div>
     <div id="status-indeterminate" style="display: none;" oncontextmenu="event.preventDefault();">
         <div></div>
         <div></div>
@@ -198,11 +211,42 @@
     document.body.classList.add('ontouchstart' in window ? 'touch' : 'no-touch');
 
     (function () {
+        const progressCurrent = document.getElementById('js-progress-current');
+        const progressTotal = document.getElementById('js-progress-total');
+        const progressSpeed = document.getElementById('js-progress-speed');
+
+        function formatBytes(bytes) {
+            if (bytes > 900000) {
+                return (bytes / 1000000).toFixed(1) + ' MB';
+            }
+
+            if (bytes > 900) {
+                return (bytes / 1000).toFixed(1) + ' kB';
+            }
+
+            return bytes + ' B';
+        }
+
+        let downloadSpeed = [];
+
         const engine = new Engine({
             args: @json($args),
             fileSizes: @json($fileSizes),
             experimentalVK: true,
             onProgress: function (current, total) {
+                progressCurrent.textContent = formatBytes(current);
+                progressTotal.textContent = total > 0 ? '/ ' + formatBytes(total) : '';
+
+                // If a new download has started, reset history
+                if (downloadSpeed.length && downloadSpeed[downloadSpeed.length - 1].value > current) {
+                    downloadSpeed = [];
+                }
+
+                downloadSpeed.push({
+                    date: new Date(),
+                    value: current,
+                });
+
                 if (total > 0) {
                     statusProgressInner.style.width = current / total * 100 + '%';
                     setStatusMode('progress');
@@ -260,6 +304,7 @@
         const statusProgressInner = document.getElementById('status-progress-inner');
         const statusIndeterminate = document.getElementById('status-indeterminate');
         const statusNotice = document.getElementById('status-notice');
+        const statusProgressStats = document.getElementById('js-progress-stats');
 
         let initializing = true;
         let statusMode = 'hidden';
@@ -268,7 +313,29 @@
 
         let animationCallbacks = [];
 
+        let lastSpeedRedraw = 0;
+
         function animate(time) {
+            // Don't update download speed more than 2 times per second
+            if ((new Date()).getTime() - lastSpeedRedraw > 500) {
+                const aFewSecondsAgo = new Date();
+                aFewSecondsAgo.setSeconds(aFewSecondsAgo.getSeconds() - 5);
+
+                // Remove older values so the download speed better reflects live value
+                downloadSpeed = downloadSpeed.filter(speed => speed.date >= aFewSecondsAgo);
+
+                if (downloadSpeed.length > 1) {
+                    const downloadAmount = downloadSpeed[downloadSpeed.length - 1].value - downloadSpeed[0].value;
+                    const timeElapsed = (downloadSpeed[downloadSpeed.length - 1].date.getTime() - downloadSpeed[0].date.getTime()) / 1000;
+
+                    progressSpeed.textContent = '(' + formatBytes(Math.floor(downloadAmount / timeElapsed)) + '/s)';
+                } else if (progressSpeed.textContent !== '') {
+                    progressSpeed.textContent = '';
+                }
+
+                lastSpeedRedraw = (new Date()).getTime();
+            }
+
             animationCallbacks.forEach(callback => callback(time));
             requestAnimationFrame(animate);
         }
@@ -278,7 +345,7 @@
         function setStatusMode(mode) {
             if (statusMode === mode || !initializing)
                 return;
-            [statusProgress, statusIndeterminate, statusNotice].forEach(elem => {
+            [statusProgress, statusIndeterminate, statusNotice, statusProgressStats].forEach(elem => {
                 elem.style.display = 'none';
             });
             animationCallbacks = animationCallbacks.filter(function (value) {
@@ -287,6 +354,7 @@
             switch (mode) {
                 case 'progress':
                     statusProgress.style.display = 'block';
+                    statusProgressStats.style.display = 'block';
                     break;
                 case 'indeterminate':
                     statusIndeterminate.style.display = 'block';

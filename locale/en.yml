@@ -1,10 +1,16 @@
 clarkwinkelmann-godot-embed:
     admin:
         settings:
-            basePath: Base Path
-            basePathHelp: URL to a folder containing <code>godot.js</code> and <code>godot.wasm</code>, without any trailing slash.
-            wasmFileSize: WASM file size
-            wasmFileSizeHelp: Used to display progress bar. In bytes.
+            versions: Versions
+            versionHeader:
+                key: Unique Key
+                basePath: Base Path
+                basePathHelp: URL to a folder containing <code>godot.js</code> and <code>godot.wasm</code>, without any trailing slash.
+                wasmFileSize: WASM file size
+                wasmFileSizeHelp: Used to display progress bar. In bytes.
+                default: Use by default
+                defaultHelp: Will be inserted in FoF Upload template and used when no parameter is provided to the bbcode.
+            versionAdd: Add version
             iframeHost: Iframe Host
             iframeHostHelp: >
                 By default the iframe is served from Flarum domain, but this leaves the website vulnerable to XSS attacks.
@@ -27,3 +33,4 @@ clarkwinkelmann-godot-embed:
         full-screen: Full screen
         touch-incompatible: This game is not designed for touch devices
         download-total-unknown: / Unknown
+        invalid-version: The Godot version is invalid

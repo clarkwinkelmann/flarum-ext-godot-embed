@@ -9,6 +9,7 @@ The bbcode is registered into FoF Upload as a template.
 bbcode parameters (all optional):
 
 - `filesize=INT`: `pck` file size in bytes. Automatically populated when using FoF Upload. Necessary for progress bar to be visible.
+- `version=TEXT`: The unique key of a version defined in the admin panel.
 - `cover=URL`: URL to an image file that will be rendered as background before the game is loaded.
 - `args=TEXT`: Arguments to pass to Godot Engine. Will be parsed similarly to command line arguments and merged with `--main-pack` argument.
 - `width=NUMBER` (default 600): Width of embedded player in pixels.
@@ -21,6 +22,10 @@ Before you can use the extension, you need to download the templates from https:
 Then provide the public URL to that folder in the "Base path" setting in the admin panel.
 For example, you can extract to `<Flarum installation>/public/assets/godot` and set `/assets/godot` in the setting.
 Optionally add the size of the wasm file in bytes in the corresponding setting for the progress bar to render.
+
+Multiple Godot versions can be configured in the admin panel.
+The order of the versions is not important, and the unique key can be anything using characters `- +,.0-9A-Za-z_`.
+The version selected as "default" will be injected in the FoF Upload template as well as in bbcodes that don't provide a version.
 
 **This extension doesn't provide any built-in security!**
 For use in production, make sure the engine and game files are accessed through a CDN URL that doesn't allow access to Flarum cookies.

@@ -9,6 +9,7 @@
     "type": "flarum-extension",
     "license": "MIT",
     "require": {
+        "ext-json": "*",
         "flarum/core": "^1.0",
         "fof/upload": "*",
         "flarum/bbcode": "*"

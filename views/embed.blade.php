@@ -235,7 +235,7 @@
             experimentalVK: true,
             onProgress: function (current, total) {
                 progressCurrent.textContent = formatBytes(current);
-                progressTotal.textContent = total > 0 ? '/ ' + formatBytes(total) : '';
+                progressTotal.textContent = total > 0 ? '/ ' + formatBytes(total) : @json($translator->trans('clarkwinkelmann-godot-embed.embed.download-total-unknown'));
 
                 // If a new download has started, reset history
                 if (downloadSpeed.length && downloadSpeed[downloadSpeed.length - 1].value > current) {
@@ -257,7 +257,9 @@
                         }, 500);
                     }
                 } else {
-                    setStatusMode('indeterminate');
+                    // if we don't know total, still show download kB but we can't update the progress bar
+                    statusProgressInner.style.width = '100%';
+                    setStatusMode('progress');
                 }
             },
             onExit: function () {

@@ -26,3 +26,4 @@ clarkwinkelmann-godot-embed:
         restart-game: Restart game
         full-screen: Full screen
         touch-incompatible: This game is not designed for touch devices
+        download-total-unknown: / Unknown
